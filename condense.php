@@ -58,17 +58,31 @@ class condense {
 		}		
 	}
 
-
-	public function __toString () {
+	public function file () {
 		$this->get();
 		if ($data = $this->data()) {
 			$name = $this->filename.'.'.$this->ext;
 			$path = $this->root.$this->dir.'/'.$name;
-			if (!file_exists($filename)) {
-				file_put_contents($path, $data);
-				return $name;
+			if (!file_exists($path)) {
+				file_put_contents($path, $data);				
+			} else {
+				if (max($this->times) > filemtime($path)) {
+					file_put_contents($path, $data);
+				}
+			}
+			switch (strtolower($this->ext)) {				
+				case 'js':			
+					return '<script type="text/javascript" src="/'.$this->dir.'/'.$name.'"></script>';
+				break;
+				case 'css':
+					return '<link rel="stylesheet" type="text/css" href="/'.$this->dir.'/'.$name.'" />';
+				break; 
 			}
 		}
+	}
+
+	public function __toString () {
+		return $this->file();
 	}
 	
 }
