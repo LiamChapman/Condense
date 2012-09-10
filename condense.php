@@ -2,14 +2,15 @@
 
 class condense {
 
-	public 	$files 	 = null, 
-			$ext	 = 'js',
-			$path 	 = 'js',			
-			$cache 	 = true,
-			$dir     = 'cache', 
-			$options = array(),
-			$type    = '',
-			$root	 = '';
+	public 	$files 	  = null, 
+			$ext	  = 'js',
+			$path 	  = 'js',			
+			$cache 	  = true,
+			$dir      = 'cache', 
+			$options  = array(),
+			$type     = '',
+			$root	  = '',
+			$filename = 'app';
 
 	private $get 	 = array(),
 			$data	 = null,
@@ -61,8 +62,11 @@ class condense {
 	public function __toString () {
 		$this->get();
 		if ($data = $this->data()) {
-			if (!file_exists($this->root.$this->dir.'/'.$this->filename.'.'.$this->ext)) {
-
+			$name = $this->filename.'.'.$this->ext;
+			$path = $this->root.$this->dir.'/'.$name;
+			if (!file_exists($filename)) {
+				file_put_contents($path, $data);
+				return $name;
 			}
 		}
 	}
@@ -90,5 +94,4 @@ $c = new condense('*', 'js');
 */
 
 $c = new condense;
-#echo $c->root.$c->path.'/*.'.$c->ext;
-$c->parse();
+echo $c;
