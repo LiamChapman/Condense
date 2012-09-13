@@ -17,7 +17,7 @@ class condense {
 			$root	  = '',
 			$filename = 'app';
 
-	private $get 	  = array(),			
+	private $fetch 	  = array(),			
 			$times    = array(),
 			$contents = null;
 
@@ -35,22 +35,22 @@ class condense {
 				if($this->files == '*' || is_null($this->files)) {	
 					$path = $this->root.$this->path.'/*.'.$this->type;					
 					foreach (glob($path) as $file) {
-						$this->get[] = $file; 
+						$this->fetch[] = $file; 
 					}				
 				}
 			break;
 			case 'array':
 				foreach ($this->files as $file) {
-					$this->get[] = $this->root.$this->path.'/'.$file.'.'.$this->type;
+					$this->fetch[] = $this->root.$this->path.'/'.$file.'.'.$this->type;
 				}
 			break;
 		}
-		return $this->get;
+		return $this->fetch;
 	}
 
 	public function contents () {
-		if (!empty($this->get)) {
-			foreach ($this->get as $file) {
+		if (!empty($this->fetch)) {
+			foreach ($this->fetch as $file) {
 				$this->contents[] = trim(file_get_contents($file)) . $this->newline ? '\n':'';
 				$this->times[] 	  = filemtime($file);
 			}
