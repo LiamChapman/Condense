@@ -4,6 +4,7 @@
  * e.g.
  $c = condense('*', 'js', 'js');
  echo $c;
+ * need to reduce request by checking times before streaming/getting
 */
 
 class condense {
