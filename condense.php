@@ -22,11 +22,13 @@ class condense {
 			$times    = array(),
 			$contents = null;
 
-	public function __construct ($files = null, $type = 'js', $path = 'js') {		
-		$this->var  = gettype($files);
-		$this->root = dirname(__FILE__) . '/'; #$_SERVER['DOCUMENT_ROOT'];	
-		$this->type = isset($type) ? $type : $this->type;
-		$this->path = isset($path) ? $path : $this->path;
+	public function __construct ($files = null, $type = 'js', $path = 'js', $dir = 'cache', $root = false) {		
+		$this->var   = gettype($files);
+		$this->root  = $root ? $_SERVER['DOCUMENT_ROOT'] : __DIR__ .'/';
+		$this->type  = isset($type)  ? $type  : $this->type;
+		$this->path  = isset($path)  ? $path  : $this->path;
+		$this->files = isset($files) ? $files : $this->files;
+		$this->dir   = isset($dir)   ? $dir   : $this->dir;
 	}
 
 	public function get () {		
@@ -40,26 +42,26 @@ class condense {
 					}				
 				}
 			break;
-			case 'array':
+			case 'array':				
 				foreach ($this->files as $file) {
-					$this->fetch[] = $this->root.$this->path.'/'.$file.'.'.$this->type;
+					$this->fetch[] = $this->root.$this->path.'/'.$file.'.'.$this->type;					
 				}
 			break;
-		}
-		return $this->fetch;
+		}		
+		return $this->fetch;		
 	}
 
-	public function contents () {
+	public function contents () {		
 		if (!empty($this->fetch)) {
-			foreach ($this->fetch as $file) {
-				$this->contents[] = trim(file_get_contents($file)) . $this->newline ? '\n':'';
+			foreach ($this->fetch as $file) {				
+				$this->contents[] = trim(file_get_contents($file)) . ($this->newline ? '\n':'');
 				$this->times[] 	  = filemtime($file);
-			}
+			}		
 			return trim(implode("",$this->contents));
 		}		
 	}
 
-	public function file () {
+	public function file ($return = false) {
 		$this->get();
 		if ($contents = $this->contents()) {
 			$name = $this->filename.'.'.$this->type;
@@ -71,13 +73,17 @@ class condense {
 					file_put_contents($path, $contents);
 				}
 			}
-			switch (strtolower($this->type)) {				
-				case 'js':			
-					return '<script type="type/javascript" src="/'.$this->dir.'/'.$name.'"></script>';
-				break;
-				case 'css':
-					return '<link rel="stylesheet" type="type/css" href="/'.$this->dir.'/'.$name.'" />';
-				break; 
+			if (!$return) {
+				switch (strtolower($this->type)) {				
+					case 'js':			
+						return '<script type="text/javascript" src="'.$this->dir.'/'.$name.'"></script>';
+					break;
+					case 'css':
+						return '<link rel="stylesheet" type="type/css" href="'.$this->dir.'/'.$name.'" />';
+					break; 
+				}
+			} else {
+				return $this->dir.'/'.$name;
 			}
 		}
 	}
