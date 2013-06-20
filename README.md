@@ -10,8 +10,21 @@ Make sure that this class gets autoloaded or required into your project.
 ## Default Example for javascript
 
 	<script src="<?= new Condense ?>"></script>
-	
+
 The above example assumes your scripts and cache directory are in your root directory and the file its looking for is named 'app.js'.
+	
+## Example for CSS
+
+	<link rel="stylesheet" href="<?= new Condense('/media/styles/', 'main', '/cache/global', 'css', '//@require'); ?>" type="text/css" />
+
+You can customise the parameters to your liking and potentially use it for something other than JS or CSS.
+
+In your main source File you simply just include the keyword followed by a space and the file path or name without the extension e.g.
+
+	//@import jquery
+	//@import plugins
+	//@import my-awesome-file
+	//@import someDirectory/with-cool-script
 
 Defaults are as follows:
 - Directory: '/scripts/'
