@@ -12,45 +12,12 @@
  * I recommend using the defaults however, you could change the setup like so:
  * @example
  *
- * $c = new Condense('main', false);
- * $c->keyword = '//@require';
- * $c->ext	= 'css';
- * $c->output = '../cache/styles';
- * $c->exec('main');
+ * new Condense('/styles/', 'main', '/cache/app', 'css', '//@require');
  *
  * You could either echo out the class as a string.
  * Or just hardcode the path in your HTML
  */
 class Condense {
-	
-	/**
-	 * @var Keyword String
-	 *
-	 * Keyword used to tell Condense to import. If Javascript, ideally it should use a comment in case of failure at runtime
-	 */
-	public $keyword 	= '//@import';
-	
-	/**
-	 * @var Directory String
-	 *
-	 * Directory to look for files and scripts
-	 */
-	public $directory   = '/scripts/';
-	
-	/**
-	 * @var Output String
-	 *
-	 * Output name, depending on output, must include directory name and no extension
-	 */
-	public $output		= '../cache/app';
-	
-	/**
-	 * @var Ext String
-	 *
-	 * Extension of types of file, wishing to condense
-	 */
-	public $ext			= 'js';
-	
 	
 	/**
 	 * Variables below are private and used internally within the class.
@@ -67,15 +34,21 @@ class Condense {
 	
 	/**
 	 * @name __construct
-	 * @param File String 
+	 * @param Directory String 	- Directory to look for files to import and run
+	 * @param File String  		- file that contains list of imports etc
+	 * @param Output String 	- directory and file name for output
+	 * @param Ext String 		- Extension / File type to import.
+	 * @param Keyword String	- Keyword to look for when importing contents into output
 	 * 
 	 * On initialisation execute script and set path and also set file name to look for.
 	 */
-	public function __construct($file = 'app', $run_on_init = true) {
-		$this->path = __DIR__ . $this->directory;
-		if ($run_on_init) {
-			$this->exec($file);
-		}
+	public function __construct($directory = '/scripts/', $file = 'app', $output = '/cache/app', $ext = 'js', $keyword = '//@import') {
+		$this->directory = $directory;
+		$this->output	 = $output;
+		$this->ext		 = $ext;
+		$this->keyword	 = $keyword;
+		$this->path 	 = dirname(__FILE__) . $this->directory;
+		$this->exec($file);
 	}
 	
 	/**
@@ -87,7 +60,7 @@ class Condense {
 	 */
 	function exec ($file) {
 		$this->source	= $this->path . $file . '.' . $this->ext;
-		$this->file		= $this->path . $this->output . '.' . $this->ext;
+		$this->file		= dirname(__FILE__) . $this->output . '.' . $this->ext;
 		if (!file_exists($this->file) || filemtime($this->source) > filemtime($this->file) ) {				
 			$this->contents = file_get_contents($this->source);
 			$this->match( $this->contents );
