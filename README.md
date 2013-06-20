@@ -43,3 +43,7 @@ When the class gets echoed on screen it will return the output source URL. By de
 
 	'/cache/app.js'
 	
+### TODO
+
+- Investigate minifying options
+- Check for child / import modification. Currently only checks if main source file has been changed.
